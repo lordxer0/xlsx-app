@@ -56,12 +56,14 @@ class CombinadorController extends Controller
 
                     $message =  "codigo ".$value[0]." = antes ".$value[1]." // despues " .$arreglo_datos[$value[0]] ." ". $cambio;
                     $txt = "[" . date('Y-m-d H:i:s') . "]:\t".  ((isset($message)) ? $message : "Error inesperado") . "\n";
-
-                    fwrite($log, $txt);
-
+                    
                     $value[1] = $arreglo_datos[$value[0]];
                     $value[0] = $value[0];
+                }else {
+                    $message =  "codigo ".$value[0]." faltante en el segundo archivo ";
+                    $txt = "[" . date('Y-m-d H:i:s') . "]:\t".  ((isset($message)) ? $message : "Error inesperado") . "\n";
                 }
+                fwrite($log, $txt);
             }
         }
 
@@ -71,7 +73,7 @@ class CombinadorController extends Controller
 
         fclose($log);
                 // redirect output to client browser
-        header('Content-Disposition: attachment;filename="nuevo_'.$nombre_destino.'.xlsx"');
+        header('Content-Disposition: attachment;filename="nuevo_'.explode('.',$nombre_destino)[0].'.xlsx"');
         header('Cache-Control: max-age=0');
 
         $writer = new Xlsx($spreadsheet);
