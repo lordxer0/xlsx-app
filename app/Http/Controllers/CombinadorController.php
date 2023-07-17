@@ -11,7 +11,13 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 class CombinadorController extends Controller
 {
     //
-    // Genera el mezcla en formato de forma y las cada
+    /**
+     * The function generates a new Excel file by merging data from two existing Excel files.
+     * 
+     * @param Request request The  parameter is an instance of the Request class, which is used
+     * to handle HTTP requests in Laravel. It contains information about the current request, such as
+     * the request method, headers, and input data.
+     */
     public function generarMezcla(Request $request){
         
         $data = $request->all();
@@ -36,7 +42,7 @@ class CombinadorController extends Controller
         }
         
         foreach ($datos_destino as $key => &$value) {
-            # code...
+            # code....
             $value[1] = $arreglo_datos[$value[0]];
             $value[0] = '\''.$value[0];
         }
