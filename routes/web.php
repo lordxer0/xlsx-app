@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\CombinadorController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,3 +16,12 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/xlsx', function () {
+    return view('xlsx');
+});
+
+Route::post('/combina_datos', [
+    CombinadorController::class,
+    'generarMezcla'
+])->name("combina_datos");
