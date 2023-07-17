@@ -11,6 +11,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 class CombinadorController extends Controller
 {
     //
+    // Genera el mezcla en formato de forma y las cada
     public function generarMezcla(Request $request){
         
         $data = $request->all();
