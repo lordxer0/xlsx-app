@@ -33,25 +33,44 @@ class CombinadorController extends Controller
 
         $datos_origen = $spreadsheet_origen->getActiveSheet()->toArray();
         $datos_destino = $spreadsheet_destino->getActiveSheet()->toArray();
-
+        
         $arreglo_datos = [];
 
         foreach ($datos_origen as $key => $value) {
             # code...
-            $arreglo_datos[$value[0]] = $value[1];
+            if($key != 0 ){
+                $arreglo_datos[$value[0]] = $value[1];
+            }
         }
+        
+        $nombre_log = 'log_comprobacion_'.date('Y-m-d').'.txt';
+
+        $log = fopen(storage_path('logs/'.$nombre_log),'c+');
         
         foreach ($datos_destino as $key => &$value) {
             # code....
-            $value[1] = $arreglo_datos[$value[0]];
-            $value[0] = '\''.$value[0];
+            if($key != 0 ){
+                if(isset($arreglo_datos[$value[0]])){
+                    
+                    $cambio = ($value[1] != $arreglo_datos[$value[0]]) ? 'cambio':'igual';
+
+                    $message =  "codigo ".$value[0]." = antes ".$value[1]." // despues " .$arreglo_datos[$value[0]] ." ". $cambio;
+                    $txt = "[" . date('Y-m-d H:i:s') . "]:\t".  ((isset($message)) ? $message : "Error inesperado") . "\n";
+
+                    fwrite($log, $txt);
+
+                    $value[1] = $arreglo_datos[$value[0]];
+                    $value[0] = $value[0];
+                }
+            }
         }
 
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
         $sheet->fromArray($datos_destino, NULL, 'A1');     
 
-        // redirect output to client browser
+        fclose($log);
+                // redirect output to client browser
         header('Content-Disposition: attachment;filename="nuevo_'.$nombre_destino.'.xlsx"');
         header('Cache-Control: max-age=0');
 
